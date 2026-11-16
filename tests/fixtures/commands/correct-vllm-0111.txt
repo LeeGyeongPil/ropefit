@@ -1,0 +1,4 @@
+# expect:
+# model: qwen3-8b
+# version: 0.11.1
+vllm serve Qwen/Qwen3-8B --hf-overrides '{"rope_scaling":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":32768}}' --max-model-len 131072

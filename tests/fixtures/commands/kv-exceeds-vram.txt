@@ -1,0 +1,4 @@
+# expect: KV_EXCEEDS_VRAM
+# model: qwen3-8b
+# vram: 16
+llama-server -m qwen3-8b-q4_k_m.gguf -c 131072 --rope-scaling yarn --rope-scale 4 --yarn-orig-ctx 32768

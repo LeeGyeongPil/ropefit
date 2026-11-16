@@ -1,0 +1,7 @@
+# expect: REPLACES_AUTHOR_VALUES
+# model: deepseek-v3
+# version: 0.20
+# The model already ships YaRN (factor 40, mscale, beta values); this replaces the whole dict
+vllm serve deepseek-ai/DeepSeek-V3 \
+  --hf-overrides '{"rope_parameters":{"rope_type":"yarn","factor":16.0,"original_max_position_embeddings":4096,"rope_theta":10000}}' \
+  --max-model-len 65536

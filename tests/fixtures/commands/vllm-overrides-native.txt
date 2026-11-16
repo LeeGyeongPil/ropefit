@@ -1,0 +1,6 @@
+# expect: OVERRIDES_NATIVE
+# model: llama-3.2-1b-instruct
+# version: 0.20
+vllm serve meta-llama/Llama-3.2-1B-Instruct \
+  --hf-overrides '{"rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":8192,"rope_theta":500000}}' \
+  --max-model-len 32768

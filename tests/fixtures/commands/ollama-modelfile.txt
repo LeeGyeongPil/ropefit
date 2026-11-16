@@ -1,0 +1,5 @@
+# expect: OLLAMA_NO_RUNTIME_ROPE
+# model: qwen3-8b
+FROM ./qwen3-8b.gguf
+PARAMETER num_ctx 131072
+PARAMETER rope_frequency_base 1000000

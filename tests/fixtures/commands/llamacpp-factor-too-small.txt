@@ -1,0 +1,4 @@
+# expect: FACTOR_TOO_SMALL
+# model: qwen3-8b
+llama-server -m qwen3-8b-q4_k_m.gguf -c 131072 \
+  --rope-scaling yarn --rope-scale 2 --yarn-orig-ctx 32768

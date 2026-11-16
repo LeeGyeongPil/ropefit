@@ -1,0 +1,6 @@
+llama-server -m <model.gguf> -c 131072 --rope-scaling yarn --rope-scale 4 --yarn-orig-ctx 32768
+
+LLAMA_ARG_CTX_SIZE=131072
+LLAMA_ARG_ROPE_SCALING_TYPE=yarn
+LLAMA_ARG_ROPE_SCALE=4
+LLAMA_ARG_YARN_ORIG_CTX=32768
