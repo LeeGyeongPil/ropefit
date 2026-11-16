@@ -1,0 +1,129 @@
+{
+  "checkedUpTo": { "vllm": "0.33.0", "llamacpp": "1.0.0", "sglang": "0.5.23", "ollama": "0.40.16", "transformers": "5.23.0" },
+  "engines": {
+    "llamacpp": {
+      "sourceUrl": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/common/arg.cpp",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "sglang": {
+      "sourceUrl": "https://raw.githubusercontent.com/sgl-project/sglang/main/python/sglang/srt/configs/model_config.py",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "transformers": {
+      "sourceUrl": "https://huggingface.co/docs/transformers/en/internal/rope_utils",
+      "checked": "2026-11-16",
+      "basis": "docs"
+    },
+    "ollama": {
+      "sourceUrl": "https://raw.githubusercontent.com/ollama/ollama/main/api/types.go",
+      "checked": "2026-11-16",
+      "basis": "source"
+    }
+  },
+  "vllm": {
+    "bands": [
+      {
+        "id": "le-0.11.0",
+        "from": null,
+        "to": "0.11.1",
+        "sourceUrl": "https://raw.githubusercontent.com/vllm-project/vllm/v0.11.0/vllm/engine/arg_utils.py",
+        "checked": "2026-11-16",
+        "basis": "source"
+      },
+      {
+        "id": "0.11.1",
+        "from": "0.11.1",
+        "to": "0.12.0",
+        "sourceUrl": "https://github.com/vllm-project/vllm/pull/28006",
+        "checked": "2026-11-16",
+        "basis": "source"
+      },
+      {
+        "id": "0.12-0.29",
+        "from": "0.12.0",
+        "to": "0.30.0",
+        "sourceUrl": "https://raw.githubusercontent.com/vllm-project/vllm/v0.12.0/vllm/transformers_utils/config.py",
+        "checked": "2026-11-16",
+        "basis": "source"
+      },
+      {
+        "id": "ge-0.30",
+        "from": "0.30.0",
+        "to": null,
+        "sourceUrl": "https://raw.githubusercontent.com/vllm-project/vllm/v0.30.0/vllm/config/model.py",
+        "checked": "2026-11-16",
+        "basis": "source"
+      }
+    ]
+  },
+  "rules": {
+    "VLLM_REMOVED_FLAG": {
+      "severity": "error",
+      "sourceUrl": "https://github.com/vllm-project/vllm/pull/28006",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "THETA_MISSING": {
+      "severity": "error",
+      "sourceUrl": "https://github.com/vllm-project/vllm/issues/58675",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "LINEAR_TRAP": {
+      "severity": "warning",
+      "sourceUrl": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/src/llama-model.cpp",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "ORIG_CTX_MISMATCH": {
+      "severity": "warning",
+      "sourceUrl": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/src/llama-context.cpp",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "FACTOR_TOO_SMALL": {
+      "severity": "error",
+      "sourceUrl": "https://docs.vllm.ai/en/latest/features/context_extension/",
+      "checked": "2026-11-16",
+      "basis": "docs"
+    },
+    "OVERRIDES_NATIVE": {
+      "severity": "error",
+      "sourceUrl": "https://huggingface.co/docs/transformers/en/internal/rope_utils",
+      "checked": "2026-11-16",
+      "basis": "docs"
+    },
+    "REPLACES_AUTHOR_VALUES": {
+      "severity": "warning",
+      "sourceUrl": "https://raw.githubusercontent.com/vllm-project/vllm/v0.32.0/vllm/config/model.py",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "STATIC_YARN_OVERSIZED": {
+      "severity": "warning",
+      "sourceUrl": "https://huggingface.co/Qwen/Qwen3-8B",
+      "checked": "2026-11-16",
+      "basis": "docs"
+    },
+    "VLLM_V030_MAXLEN": {
+      "severity": "error",
+      "sourceUrl": "https://raw.githubusercontent.com/vllm-project/vllm/v0.30.0/vllm/config/model.py",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "OLLAMA_NO_RUNTIME_ROPE": {
+      "severity": "warning",
+      "sourceUrl": "https://raw.githubusercontent.com/ollama/ollama/main/api/types.go",
+      "checked": "2026-11-16",
+      "basis": "source"
+    },
+    "KV_EXCEEDS_VRAM": {
+      "severity": "warning",
+      "sourceUrl": "https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json",
+      "checked": "2026-11-16",
+      "basis": "docs"
+    }
+  }
+}
