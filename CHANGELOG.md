@@ -3,6 +3,11 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-11-26
+
+### Added
+- `NO_SCALING_LONG_CTX` rule: warns when a command asks for more context than the model's original length with no RoPE scaling set (info when the original length is only assumed).
+
 ## [0.1.0] - 2026-11-16
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "ropefit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Generate and check per-engine RoPE/YaRN long-context settings for llama.cpp, vLLM, SGLang and Ollama in a no-install browser app.",
   "license": "MIT",
