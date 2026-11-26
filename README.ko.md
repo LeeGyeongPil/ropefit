@@ -141,7 +141,7 @@ vllm serve Qwen/Qwen3-8B \
 llama-server -m qwen3-8b-q4_k_m.gguf -c 131072 --rope-scaling yarn --rope-scale 4 --yarn-orig-ctx 32768
 ```
 
-규칙 11개:
+규칙 12개:
 
 | 규칙 | 심각도 | 잡아내는 것 | 근거 |
 |---|---|---|---|
@@ -156,10 +156,11 @@ llama-server -m qwen3-8b-q4_k_m.gguf -c 131072 --rope-scaling yarn --rope-scale 
 | `VLLM_V030_MAXLEN` | 오류 | vLLM 0.30 이상이 `max_position_embeddings` 를 넘는 길이를 거부 | 소스 |
 | `OLLAMA_NO_RUNTIME_ROPE` | 경고 | Ollama 가 무시하는 Modelfile `rope_frequency_*` 매개변수 | 소스 |
 | `KV_EXCEEDS_VRAM` | 경고 | KV 캐시만으로 VRAM 초과 | 문서 |
+| `NO_SCALING_LONG_CTX` | 경고 | 스케일링 없이 원래 길이를 넘는 컨텍스트 요청(원래 길이가 추정값이면 정보) | 문서 |
 
 "이중 스케일링"은 곱셈이 아닙니다. override 는 모델의 rope 설정을 **대체**하므로, 진짜 위험은 두 배율이 겹치는 것이 아니라 제작자의 값(예: `mscale`, `beta_fast`)을 잃는 것입니다. `REPLACES_AUTHOR_VALUES` 가 이를 경고하고, 생성기는 제작자의 추가 키를 보존합니다.
 
-모든 결과에는 근거 링크와 확인 날짜가 붙습니다(이번 릴리스의 규칙은 모두 2026-11-16 확인). "소스"는 엔진 소스 코드에서, "문서"는 문서에서 읽은 규칙입니다.
+모든 결과에는 근거 링크와 확인 날짜가 붙습니다(이번 릴리스의 규칙은 2026-11-16, `NO_SCALING_LONG_CTX` 는 2026-11-26 확인). "소스"는 엔진 소스 코드에서, "문서"는 문서에서 읽은 규칙입니다.
 
 ### 모델 입력
 
@@ -217,8 +218,8 @@ flowchart LR
 - 규칙을 엔진을 실행해 검증하지는 않았습니다. 엔진 소스와 문서를 따릅니다. vLLM 0.30 이상 길이 상한(`VLLM_V030_MAXLEN`)은 소스를 읽기만 했고, 화면에도 "소스 기준"으로 표시됩니다.
 - Ollama 는 안내만 합니다. 검사 탭은 Modelfile 의 `PARAMETER rope_frequency_*` 줄만 읽습니다.
 - 멀티헤드 잠재 어텐션·슬라이딩 윈도우 모델은 KV 추정을 하지 않습니다.
-- 스케일링 없이 긴 컨텍스트를 요청해도 경고하지 않습니다(스케일링 설정 유무만 계산합니다).
 - 원격 GGUF URL, 공유 링크, CLI 는 이번 릴리스에 없습니다.
+- llama.cpp 의 `--rope-scale 1` 은 "스케일링 설정됨"으로 취급되어 `NO_SCALING_LONG_CTX` 가 나오지 않습니다.
 
 ## 자주 겪는 문제
 
@@ -238,7 +239,7 @@ npm run typecheck
 npm run build
 ```
 
-이번 릴리스에서 확인한 결과: 12개 파일의 테스트 76개 통과, 타입 검사 통과, 빌드가 `dist/` 를 만듭니다. 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
+이번 릴리스에서 확인한 결과: 12개 파일의 테스트 80개 통과, 타입 검사 통과, 빌드가 `dist/` 를 만듭니다. 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
 
 ## 언어
 

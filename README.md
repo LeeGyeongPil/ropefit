@@ -141,7 +141,7 @@ For the pasted `llama-server -m qwen3-8b-q4_k_m.gguf -c 131072 --rope-scale 4`, 
 llama-server -m qwen3-8b-q4_k_m.gguf -c 131072 --rope-scaling yarn --rope-scale 4 --yarn-orig-ctx 32768
 ```
 
-The 11 rules:
+The 12 rules:
 
 | Rule | Severity | Catches | Basis |
 |---|---|---|---|
@@ -156,10 +156,11 @@ The 11 rules:
 | `VLLM_V030_MAXLEN` | error | vLLM 0.30+ rejecting a length above `max_position_embeddings` | source |
 | `OLLAMA_NO_RUNTIME_ROPE` | warning | `rope_frequency_*` Modelfile parameters, ignored by Ollama | source |
 | `KV_EXCEEDS_VRAM` | warning | KV cache alone larger than your VRAM | docs |
+| `NO_SCALING_LONG_CTX` | warning | a context longer than the original length with no scaling set (info when the original length is only assumed) | docs |
 
 "Double scaling" is not a multiplication. An override replaces the model's rope settings, so the real risk is losing the author's values (for example `mscale` or `beta_fast`), not stacking two factors. `REPLACES_AUTHOR_VALUES` warns about that, and the generator keeps the author's extra keys.
 
-Every finding shows a link to the evidence and the date it was checked (2026-11-16 for all rules in this release). "Source" means the rule was read from the engine's source code, "docs" means from its documentation.
+Every finding shows a link to the evidence and the date it was checked (2026-11-16, `NO_SCALING_LONG_CTX` 2026-11-26). "Source" means the rule was read from the engine's source code, "docs" means from its documentation.
 
 ### Model input
 
@@ -217,8 +218,8 @@ Checked 2026-11-16.
 - No engine was run to verify the rules; they follow engine sources and docs. The vLLM 0.30+ length cap (`VLLM_V030_MAXLEN`) was read from the source only, and the page marks it "source based".
 - Ollama is guidance only. The Check tab reads only `PARAMETER rope_frequency_*` lines of a Modelfile.
 - No KV estimate for multi-head latent attention or sliding-window models.
-- No warning is shown when a long context is requested without any scaling set.
 - Remote GGUF URLs, share links and a CLI are not part of this release.
+- `--rope-scale 1` in llama.cpp counts as "scaling set", so `NO_SCALING_LONG_CTX` does not fire for it.
 
 ## Troubleshooting
 
@@ -238,7 +239,7 @@ npm run typecheck
 npm run build
 ```
 
-Verified in this release: 76 tests across 12 files pass, the type check passes, and the build writes `dist/`. Bugs and suggestions are welcome as issues. See [CHANGELOG.md](CHANGELOG.md) for changes.
+Verified in this release: 80 tests across 12 files pass, the type check passes, and the build writes `dist/`. Bugs and suggestions are welcome as issues. See [CHANGELOG.md](CHANGELOG.md) for changes.
 
 ## Language
 
