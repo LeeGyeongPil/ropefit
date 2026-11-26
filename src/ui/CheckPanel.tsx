@@ -70,7 +70,7 @@ export function CheckPanel({ model, vramGiB, kvDtype }: Props) {
                 <span className="sev">{t(`severity.${f.severity}`)}</span> <code>{f.ruleId}</code>
               </p>
               <h4>{t(`rule.${f.ruleId}.title`, f.params)}</h4>
-              <p>{t(`rule.${f.ruleId}.body`, f.params)}</p>
+              <p>{t(f.params.estimated === 1 ? `rule.${f.ruleId}.body.estimated` : `rule.${f.ruleId}.body`, f.params)}</p>
               {f.fix && (
                 <div className="block">
                   <div className="block-head">

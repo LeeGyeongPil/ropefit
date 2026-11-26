@@ -124,6 +124,12 @@
       "sourceUrl": "https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json",
       "checked": "2026-11-16",
       "basis": "docs"
+    },
+    "NO_SCALING_LONG_CTX": {
+      "severity": "warning",
+      "sourceUrl": "https://huggingface.co/Qwen/Qwen3-8B",
+      "checked": "2026-11-26",
+      "basis": "docs"
     }
   }
 }

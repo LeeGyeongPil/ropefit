@@ -29,10 +29,10 @@ export interface LintResult {
 const NATIVE_TYPES = new Set(["llama3", "longrope", "su", "per-layer"]);
 const EPS = 1e-9;
 
-function finding(ruleId: string, params: Finding["params"], fix?: string): Finding {
+function finding(ruleId: string, params: Finding["params"], fix?: string, severity?: Finding["severity"]): Finding {
   const meta = RULES[ruleId];
   if (!meta) throw new Error(`Unknown rule ${ruleId}: add it to src/rules/engines.json`);
-  return { ruleId, severity: meta.severity, params, fix, sourceUrl: meta.sourceUrl, basis: meta.basis };
+  return { ruleId, severity: severity ?? meta.severity, params, fix, sourceUrl: meta.sourceUrl, basis: meta.basis };
 }
 
 /** Rebuild the command the user probably meant, for rules where that is well defined. */
@@ -144,6 +144,14 @@ export function lintParsed(parsed: ParsedConfig, ctx: LintContext): Finding[] {
     if (est.supported && est.gib > ctx.vramGiB) {
       out.push(finding("KV_EXCEEDS_VRAM", { kv: est.gib.toFixed(2), vram: ctx.vramGiB, ctx: parsed.ctx }));
     }
+  }
+
+  // 12. A context longer than the original length with no scaling at all (and none built into the model).
+  // Commands that tried to set scaling but were ignored (removed vLLM flags, Ollama rope_frequency_*) are only skipped when the rule that reports them actually fired above.
+  const triedScaling = out.some((f) => f.ruleId === "VLLM_REMOVED_FLAG" || f.ruleId === "OLLAMA_NO_RUNTIME_ROPE");
+  if (model && parsed.ctx && parsed.ctx > model.originalCtx && !scalingApplied && !override && !model.existing && !triedScaling) {
+    const estimated = model.originalCtxSource === "max_position_embeddings";
+    out.push(finding("NO_SCALING_LONG_CTX", { ctx: parsed.ctx, orig: model.originalCtx, estimated: estimated ? 1 : 0 }, fixText(), estimated ? "info" : undefined));
   }
 
   const order = { error: 0, warning: 1, info: 2 } as const;

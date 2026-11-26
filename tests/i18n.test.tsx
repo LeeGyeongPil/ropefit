@@ -41,6 +41,11 @@ describe("i18n tables", () => {
     }
   });
 
+  it("the estimated-length variant of NO_SCALING_LONG_CTX exists in both languages and names the fix", () => {
+    expect(MESSAGES.en["rule.NO_SCALING_LONG_CTX.body.estimated"]).toMatch(/YaRN/);
+    expect(MESSAGES.ko["rule.NO_SCALING_LONG_CTX.body.estimated"]).toMatch(/YaRN/);
+  });
+
   it("every note code, block label, engine and band has both translations", () => {
     const keys = Object.keys(MESSAGES.en);
     for (const prefix of ["note.", "block.", "engine.", "vllm.band.", "kv.unsupported.", "error.hf."]) {

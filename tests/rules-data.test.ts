@@ -16,7 +16,7 @@ describe("rule data evidence", () => {
     for (const b of data.vllm.bands) check(`band ${b.id}`, b);
   });
   it("every rule has a source URL, checked date and basis", () => {
-    expect(Object.keys(data.rules)).toHaveLength(11);
+    expect(Object.keys(data.rules)).toHaveLength(12);
     for (const [id, r] of Object.entries(data.rules)) check(`rule ${id}`, r);
   });
   it("every engine entry has evidence", () => {

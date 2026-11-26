@@ -163,5 +163,8 @@
   "rule.OLLAMA_NO_RUNTIME_ROPE.title": "Ollama ignores {params}",
   "rule.OLLAMA_NO_RUNTIME_ROPE.body": "Ollama has no runtime RoPE parameters since v0.2.0. The values must be inside the GGUF, or run the model with llama.cpp.",
   "rule.KV_EXCEEDS_VRAM.title": "KV cache {kv} GiB is larger than {vram} GiB of VRAM at {ctx} tokens",
-  "rule.KV_EXCEEDS_VRAM.body": "The cache alone does not fit, and the weights come on top. Lower the context, quantize the KV cache, or use more memory."
+  "rule.KV_EXCEEDS_VRAM.body": "The cache alone does not fit, and the weights come on top. Lower the context, quantize the KV cache, or use more memory.",
+  "rule.NO_SCALING_LONG_CTX.title": "Context {ctx} is longer than the original {orig} tokens, but no RoPE scaling is set",
+  "rule.NO_SCALING_LONG_CTX.body": "Without scaling the model is used beyond the length it was trained for, and quality can drop sharply. Add YaRN (or the model's own scheme) for this length; a suggested command is shown when one can be built.",
+  "rule.NO_SCALING_LONG_CTX.body.estimated": "The original length ({orig}) is only assumed to be max_position_embeddings, so this may be a false alarm. Check the model card; if the model really is longer, ignore this. If it is not, add YaRN (or the model's own scheme) for this length."
 }

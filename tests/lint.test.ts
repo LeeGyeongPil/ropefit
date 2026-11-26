@@ -44,11 +44,11 @@ function run(f: Fixture) {
 }
 
 describe("lint rules", () => {
-  it("has at least 12 fixtures and covers all 11 rules", () => {
+  it("has at least 12 fixtures and covers all 12 rules", () => {
     expect(fixtures.length).toBeGreaterThanOrEqual(12);
     const covered = new Set(fixtures.flatMap((f) => f.expected));
     expect([...covered].sort()).toEqual([...RULE_IDS].sort());
-    expect(RULE_IDS).toHaveLength(11);
+    expect(RULE_IDS).toHaveLength(12);
   });
 
   it("each command fixture yields exactly its expected rule ids", () => {
@@ -89,7 +89,7 @@ describe("lint rules", () => {
       for (const x of run(f).findings) {
         expect(x.sourceUrl).toMatch(/^https:\/\//);
         expect(["source", "docs"]).toContain(x.basis);
-        expect(["error", "warning"]).toContain(x.severity);
+        expect(["error", "warning", "info"]).toContain(x.severity);
       }
     }
   });
@@ -100,6 +100,35 @@ describe("lint rules", () => {
     expect(lintText(body, { model, vllmVersion: "0.11.0" }).findings.map((x) => x.ruleId)).toEqual([]);
     expect(lintText(body, { model, vllmVersion: "0.11.1" }).findings.map((x) => x.ruleId)).toEqual(["VLLM_REMOVED_FLAG"]);
     expect(lintText(body, { model, vllmVersion: "0.99" }).beyondChecked).toBe(true);
+  });
+
+  it("NO_SCALING_LONG_CTX fires only for long, unscaled, non-native requests", () => {
+    const model = loadSample("qwen3-8b");
+    const long = (cmd: string, m = model) => lintText(cmd, { model: m, vllmVersion: "0.32" }).findings.filter((x) => x.ruleId === "NO_SCALING_LONG_CTX");
+    expect(long("llama-server -m q.gguf -c 131072")).toHaveLength(1);
+    expect(long("python -m sglang.launch_server --model-path Qwen/Qwen3-8B --context-length 131072")[0]?.severity).toBe("warning");
+    expect(long("vllm serve Qwen/Qwen3-8B --max-model-len 131072")[0]?.fix).toContain("--hf-overrides");
+    expect(long("vllm serve Qwen/Qwen3-8B --max-model-len 32768")).toEqual([]);
+    expect(long("vllm serve Qwen/Qwen3-8B --max-model-len 131072 --hf-overrides '{\"rope_parameters\":{\"rope_type\":\"yarn\",\"factor\":4.0,\"original_max_position_embeddings\":32768,\"rope_theta\":1000000}}'")).toEqual([]);
+    const ollama = long("FROM qwen3:8b\nPARAMETER num_ctx 131072");
+    expect(ollama).toHaveLength(1);
+    expect(ollama[0]?.fix).toBeUndefined();
+    expect(long("vllm serve m --max-model-len 131072", loadSample("llama-3.2-1b-instruct"))).toEqual([]);
+  });
+
+  it("NO_SCALING_LONG_CTX is skipped only when another rule already reported the ignored scaling", () => {
+    const model = loadSample("qwen3-8b");
+    const ids = (cmd: string, v?: string) => lintText(cmd, { model, vllmVersion: v }).findings.map((x) => x.ruleId);
+    expect(ids("vllm serve Qwen/Qwen3-8B --rope-scaling '{\"rope_type\":\"yarn\",\"factor\":4}' --max-model-len 131072", "0.32")).toEqual(["VLLM_REMOVED_FLAG"]);
+    expect(ids("FROM qwen3:8b\nPARAMETER num_ctx 131072\nPARAMETER rope_frequency_base 1000000")).toEqual(["OLLAMA_NO_RUNTIME_ROPE"]);
+    expect(ids("vllm serve Qwen/Qwen3-8B --rope-theta 1000000 --max-model-len 131072", "0.10.2")).toEqual(["NO_SCALING_LONG_CTX"]);
+  });
+
+  it("an assumed original length lowers NO_SCALING_LONG_CTX to info", () => {
+    const model = { ...loadSample("qwen3-8b"), originalCtxSource: "max_position_embeddings" as const };
+    const f = lintText("llama-server -m q.gguf -c 131072", { model }).findings.find((x) => x.ruleId === "NO_SCALING_LONG_CTX");
+    expect(f?.severity).toBe("info");
+    expect(f?.params.estimated).toBe(1);
   });
 
   it("unknown engines and broken quoting are reported, not thrown", () => {

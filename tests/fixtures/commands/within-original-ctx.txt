@@ -1,0 +1,4 @@
+# expect:
+# model: qwen3-8b
+# version: 0.32
+vllm serve Qwen/Qwen3-8B --max-model-len 32768

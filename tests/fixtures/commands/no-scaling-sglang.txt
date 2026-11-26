@@ -1,0 +1,3 @@
+# expect: NO_SCALING_LONG_CTX
+# model: qwen3-8b
+python -m sglang.launch_server --model-path Qwen/Qwen3-8B --context-length 131072
